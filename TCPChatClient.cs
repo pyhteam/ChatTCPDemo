@@ -18,8 +18,7 @@ namespace Windows_Forms_Chat
 
         public int serverPort;
         public string serverIP;
-
-        public static TCPChatClient CreateInstance(int port, int serverPort, string serverIP, TextBox chatTextBox, ListBox listBox)
+        public static TCPChatClient CreateInstance(int port, int serverPort, string serverIP, TextBox chatTextBox)
         {
             TCPChatClient tcp = null;
             //if port values are valid and ip worth attempting to join
@@ -33,18 +32,16 @@ namespace Windows_Forms_Chat
                 tcp.serverPort = serverPort;
                 tcp.serverIP = serverIP;
                 tcp.chatTextBox = chatTextBox;
-                tcp.listBox = listBox;
                 tcp.clientSocket.socket = tcp.socket;
-
             }
 
             return tcp;
         }
 
-        public User ConnectToServer(User user)
+        public void ConnectToServer()
         {
             int attempts = 0;
-            SetChat($"{user.Username} Connecting to server...");
+            SetChat($" Connecting to server...");
             while (!socket.Connected)
             {
                 try
@@ -61,24 +58,16 @@ namespace Windows_Forms_Chat
             }
 
             //Console.Clear();
-            AddToChat($"{user.Username} Connected");
+            AddToChat($"Connected");
             //send username to server
-            SendString(user.Username);
-            SetListUser(user.Username);
+
             //keep open thread for receiving data
-            clientSocket.User = user;
             clientSocket.socket.BeginReceive(clientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, clientSocket);
-            return user;
         }
 
-        public void SendString(string text, string? username = null)
+        public void SendString(string text, string username)
         {
-            byte[] buffer;
-            buffer = Encoding.ASCII.GetBytes(": " + text);
-            if (username == null)
-            {
-                buffer = Encoding.ASCII.GetBytes(username + ": " + text);
-            }
+            byte[] buffer = Encoding.ASCII.GetBytes(username + ": " + text);
             socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
 

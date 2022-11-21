@@ -22,16 +22,15 @@ namespace Windows_Forms_Chat
         TCPChatServer server = null;
         TCPChatClient client = null;
         List<User> Users = new List<User>();
-
+        User user1;
         public Form1()
         {
             InitializeComponent();
-
         }
 
         public bool CanHostOrJoin()
         {
-            if (server == null && client == null)
+            if (server == null)
                 return true;
             else
                 return false;
@@ -44,21 +43,12 @@ namespace Windows_Forms_Chat
                 try
                 {
                     int port = int.Parse(MyPortTextBox.Text);
-                    server = TCPChatServer.createInstance(port, ChatTextBox, listUserOnline);
+                    server = TCPChatServer.createInstance(port, ChatTextBox);
+
                     //oh no, errors
                     if (server == null)
                         throw new Exception("Incorrect port value!");//thrown exceptions should exit the try and land in next catch
-
-                    var user = new User()
-                    {
-                        Id = Users.Count + 1,
-                        Username = "admin",
-                        Role = "admin"
-
-                    };
-                    Users.Add(user);
                     server.SetupServer();
-                    IsAdmin(user.Username);
 
                 }
                 catch (Exception ex)
@@ -79,28 +69,15 @@ namespace Windows_Forms_Chat
                 {
                     int port = int.Parse(MyPortTextBox.Text);
                     int serverPort = int.Parse(serverPortTextBox.Text);
-                    client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox, listUserOnline);
+                    client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox);
 
                     if (client == null)
                         throw new Exception("Incorrect port value!");//thrown exceptions should exit the try and land in next catch
 
                     //check username exists listUseronline
 
-                    var user = new User()
-                    {
-                        Id = Users.Count + 1,
-                        Username = txtUsername.Text,
-                        Role = "member"
-                    };
-                    if (Users.Any(x => x.Username == user.Username))
-                    {
-                        MessageBox.Show("Username already exists");
-                        return;
-                    }
-                    User userConnect = client.ConnectToServer(user);
-                    client.SendString($" your connected");
-                    // var usersOnline = server.UserOnline();
-                    Users.Add(userConnect);
+                    client.ConnectToServer();
+                    client.SendString("connected", txtUsername.Text);
                 }
                 catch (Exception ex)
                 {
@@ -111,18 +88,6 @@ namespace Windows_Forms_Chat
 
             }
         }
-        private void IsAdmin(string username)
-        {
-
-            var admin = Users.Find(x => x.Role == username && x.Username == username);
-            if (admin.Username == "admin")
-            {
-
-                btnKick.Visible = true;
-                lbUsernameAdmin.Text = admin.Username;
-            }
-
-        }
 
         private void SendButton_Click(object sender, EventArgs e)
         {
@@ -130,13 +95,21 @@ namespace Windows_Forms_Chat
             if (client != null)
                 client.SendString(TypeTextBox.Text, username);
             else if (server != null)
-                server.SendToAll(TypeTextBox.Text, null);
+                server.SendToAll(TypeTextBox.Text, client.clientSocket);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            btnKick.Visible = false;
+
             //On form loaded
+            user1 = new User()
+            {
+                Id = Users.Count + 1,
+                Username = txtUsername.Text,
+                Role = "member",
+            };
+            Users.Add(user1);
+
             ticTacToe.buttons.Add(button1);
             ticTacToe.buttons.Add(button2);
             ticTacToe.buttons.Add(button3);

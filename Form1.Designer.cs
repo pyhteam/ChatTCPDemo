@@ -52,12 +52,6 @@
             this.button9 = new System.Windows.Forms.Button();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.panelAdmin = new System.Windows.Forms.Panel();
-            this.btnKick = new System.Windows.Forms.Button();
-            this.lbUsernameAdmin = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.listUserOnline = new System.Windows.Forms.ListBox();
-            this.panelAdmin.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -309,63 +303,11 @@
             this.label6.TabIndex = 2;
             this.label6.Text = "Username";
             // 
-            // panelAdmin
-            // 
-            this.panelAdmin.Controls.Add(this.btnKick);
-            this.panelAdmin.Controls.Add(this.lbUsernameAdmin);
-            this.panelAdmin.Controls.Add(this.label7);
-            this.panelAdmin.Controls.Add(this.listUserOnline);
-            this.panelAdmin.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelAdmin.Location = new System.Drawing.Point(0, 0);
-            this.panelAdmin.Name = "panelAdmin";
-            this.panelAdmin.Size = new System.Drawing.Size(185, 548);
-            this.panelAdmin.TabIndex = 15;
-            // 
-            // btnKick
-            // 
-            this.btnKick.Location = new System.Drawing.Point(12, 340);
-            this.btnKick.Name = "btnKick";
-            this.btnKick.Size = new System.Drawing.Size(75, 23);
-            this.btnKick.TabIndex = 3;
-            this.btnKick.Text = "Kick";
-            this.btnKick.UseVisualStyleBackColor = true;
-            // 
-            // lbUsernameAdmin
-            // 
-            this.lbUsernameAdmin.AutoSize = true;
-            this.lbUsernameAdmin.Location = new System.Drawing.Point(76, 16);
-            this.lbUsernameAdmin.Name = "lbUsernameAdmin";
-            this.lbUsernameAdmin.Size = new System.Drawing.Size(38, 15);
-            this.lbUsernameAdmin.TabIndex = 2;
-            this.lbUsernameAdmin.Text = "label8";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.BackColor = System.Drawing.Color.Red;
-            this.label7.Location = new System.Drawing.Point(12, 16);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(46, 15);
-            this.label7.TabIndex = 1;
-            this.label7.Text = "Admin:";
-            // 
-            // listUserOnline
-            // 
-            this.listUserOnline.FormattingEnabled = true;
-            this.listUserOnline.ItemHeight = 15;
-            this.listUserOnline.Items.AddRange(new object[] {
-            "Host"});
-            this.listUserOnline.Location = new System.Drawing.Point(12, 60);
-            this.listUserOnline.Name = "listUserOnline";
-            this.listUserOnline.Size = new System.Drawing.Size(160, 274);
-            this.listUserOnline.TabIndex = 0;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1023, 548);
-            this.Controls.Add(this.panelAdmin);
             this.Controls.Add(this.txtUsername);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
@@ -394,8 +336,6 @@
             this.Name = "Form1";
             this.Text = "APP CHAT V1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.panelAdmin.ResumeLayout(false);
-            this.panelAdmin.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -427,11 +367,6 @@
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Panel panelAdmin;
-        private System.Windows.Forms.Button btnKick;
-        private System.Windows.Forms.Label lbUsernameAdmin;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ListBox listUserOnline;
     }
 }
 

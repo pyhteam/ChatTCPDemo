@@ -16,19 +16,19 @@ namespace Windows_Forms_Chat
         public Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         //connected clients
         public List<ClientSocket> clientSockets = new List<ClientSocket>();
-
-        public static TCPChatServer createInstance(int port, TextBox chatTextBox, ListBox listBox)
+        static TCPChatServer tcp = null;
+        public static TCPChatServer createInstance(int port, TextBox chatTextBox)
         {
-            TCPChatServer tcp = null;
+
             //setup if port within range and valid chat box given
             if (port > 0 && port < 65535 && chatTextBox != null)
             {
                 tcp = new TCPChatServer();
                 tcp.port = port;
                 tcp.chatTextBox = chatTextBox;
-                tcp.listBox = listBox;
             }
             //return empty if user not enter useful details
+
             return tcp;
         }
 
@@ -40,7 +40,7 @@ namespace Windows_Forms_Chat
             //kick off thread to read connecting clients, when one connects, it'll call out AcceptCallback function
             serverSocket.BeginAccept(AcceptCallback, this);
             chatTextBox.Text += "Server setup complete\n";
-            listBox.Items.Add("Admin");
+
         }
 
         public void CloseAllSockets()
@@ -69,12 +69,10 @@ namespace Windows_Forms_Chat
 
             ClientSocket newClientSocket = new ClientSocket();
             newClientSocket.socket = joiningSocket;
-
             clientSockets.Add(newClientSocket);
             //start a thread to listen out for this new joining socket. Therefore there is a thread open for each client
             joiningSocket.BeginReceive(newClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, newClientSocket);
             AddToChat("Client connected, waiting for request...");
-            SetListUser(newClientSocket.User.Username);
             //we finished this accept thread, better kick off another so more people can join
             serverSocket.BeginAccept(AcceptCallback, null);
         }
@@ -95,7 +93,6 @@ namespace Windows_Forms_Chat
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 currentClientSocket.socket.Close();
                 clientSockets.Remove(currentClientSocket);
-                RemoveListUser(currentClientSocket.User.Username);
                 return;
             }
 
@@ -103,7 +100,7 @@ namespace Windows_Forms_Chat
             Array.Copy(currentClientSocket.buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
 
-            AddToChat("Admin: " + text);
+            AddToChat(text);
 
             if (text.ToLower() == "!commands") // Client requested time
             {
@@ -118,7 +115,6 @@ namespace Windows_Forms_Chat
                 currentClientSocket.socket.Close();
                 clientSockets.Remove(currentClientSocket);
                 AddToChat("Client disconnected");
-                RemoveListUser(currentClientSocket.User.Username);
                 return;
             }
             else

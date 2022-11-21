@@ -102,40 +102,62 @@ namespace Windows_Forms_Chat
 
             AddToChat(text);
 
-            if (text.ToLower() == "!commands") // Client requested time
+            byte[] data = null;
+            string newText = text.Split(":")[1].Trim().ToLower();
+            switch (newText)
             {
-                byte[] data = Encoding.ASCII.GetBytes("Commands are !commands !about !who !whisper !exit");
-                currentClientSocket.socket.Send(data);
-                AddToChat("Commands sent to client");
+                case "!about":
+                    data = Encoding.ASCII.GetBytes("This is a simple TCP chat server");
+                    currentClientSocket.socket.Send(data);
+                    AddToChat("Sent to client");
+                    break;
+                case "!who":
+                    data = Encoding.ASCII.GetBytes("This is a simple TCP chat server");
+                    currentClientSocket.socket.Send(data);
+                    AddToChat("Sent to client");
+                    break;
+                case "!help":
+                    data = Encoding.ASCII.GetBytes("This is a simple TCP chat server");
+                    currentClientSocket.socket.Send(data);
+                    AddToChat("Commands are !commands !about !who !whisper !exit");
+                    break;
+                case "!whisper":
+                    data = Encoding.ASCII.GetBytes("This is a simple TCP chat server");
+                    currentClientSocket.socket.Send(data);
+                    AddToChat("Send From " + text.Split(":")[0].Trim().ToLower());
+                    break;
+                case "!exit":
+                    currentClientSocket.socket.Shutdown(SocketShutdown.Both);
+                    currentClientSocket.socket.Close();
+                    clientSockets.Remove(currentClientSocket);
+                    AddToChat("Client disconnected");
+                    break;
+                default:
+                    break;
             }
-            else if (text.ToLower() == "!exit") // Client wants to exit gracefully
-            {
-                // Always Shutdown before closing
-                currentClientSocket.socket.Shutdown(SocketShutdown.Both);
-                currentClientSocket.socket.Close();
-                clientSockets.Remove(currentClientSocket);
-                AddToChat("Client disconnected");
-                return;
-            }
-            else
-            {
-                //normal message broadcast out to all clients
-                SendToAll(text, currentClientSocket);
-            }
+
+
+            //normal message broadcast out to all clients
+            SendToAll(text, currentClientSocket);
+
             //we just received a message from this socket, better keep an ear out with another thread for the next one
             currentClientSocket.socket.BeginReceive(currentClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, currentClientSocket);
         }
 
         public void SendToAll(string str, ClientSocket from)
         {
-            foreach (ClientSocket c in clientSockets)
+            if (clientSockets.Count > 0)
             {
-                if (from == null || !from.socket.Equals(c))
+                foreach (ClientSocket c in clientSockets)
                 {
-                    byte[] data = Encoding.ASCII.GetBytes(str);
-                    c.socket.Send(data);
+                    if (from == null || !from.socket.Equals(c))
+                    {
+                        byte[] data = Encoding.ASCII.GetBytes(str);
+                        c.socket.Send(data);
+                    }
                 }
             }
+
         }
 
 

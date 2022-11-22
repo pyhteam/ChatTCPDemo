@@ -68,6 +68,7 @@ namespace Windows_Forms_Chat
                 {
                     int port = int.Parse(MyPortTextBox.Text);
                     int serverPort = int.Parse(serverPortTextBox.Text);
+                    WriteFile(txtUsername.Text);
                     client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox);
 
                     if (client == null)
@@ -87,6 +88,11 @@ namespace Windows_Forms_Chat
                 }
 
             }
+        }
+
+        private void WriteFile(string username)
+        {
+
         }
 
         private void SendButton_Click(object sender, EventArgs e)

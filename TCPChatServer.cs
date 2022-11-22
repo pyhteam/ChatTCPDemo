@@ -127,10 +127,7 @@ namespace Windows_Forms_Chat
                     AddToChat("Send From " + text.Split(":")[0].Trim().ToLower());
                     break;
                 case "!exit":
-                    currentClientSocket.socket.Shutdown(SocketShutdown.Both);
-                    currentClientSocket.socket.Close();
-                    clientSockets.Remove(currentClientSocket);
-                    AddToChat("Client disconnected");
+                    Application.Exit();
                     break;
                 default:
                     break;

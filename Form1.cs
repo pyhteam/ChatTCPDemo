@@ -22,7 +22,6 @@ namespace Windows_Forms_Chat
         TCPChatServer server = null;
         TCPChatClient client = null;
         List<User> Users = new List<User>();
-        User user1;
         public Form1()
         {
             InitializeComponent();
@@ -78,6 +77,7 @@ namespace Windows_Forms_Chat
 
                     client.ConnectToServer();
                     client.SendString("connected", txtUsername.Text);
+                    JoinButton.Text = "Change Name";
                 }
                 catch (Exception ex)
                 {
@@ -102,14 +102,6 @@ namespace Windows_Forms_Chat
         {
 
             //On form loaded
-            user1 = new User()
-            {
-                Id = Users.Count + 1,
-                Username = txtUsername.Text,
-                Role = "member",
-            };
-            Users.Add(user1);
-
             ticTacToe.buttons.Add(button1);
             ticTacToe.buttons.Add(button2);
             ticTacToe.buttons.Add(button3);
